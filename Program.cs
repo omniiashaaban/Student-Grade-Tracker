@@ -66,23 +66,31 @@ namespace OOP_Pro
                 // لو كتب 1 هيضيف كورس 
                 if (CourseChois == "1")
                 {
+                    Console.WriteLine(" ( * ) To Exit Write =====> end   ");
+
                     while (defultVAlu.ToLower() == "y")
                     {
+
                         Console.WriteLine("Enter subject name:");
                         string name = Console.ReadLine();
 
-                        Console.WriteLine("Enter subject hours:");
-                        int hours;
-
-                        while (!int.TryParse(Console.ReadLine(), out hours))
+                        if (name.ToLower() != "end")
                         {
-                            Console.WriteLine("Enter subject hours again:");
+                            Console.WriteLine("Enter subject hours:");
+                            int hours;
+
+                            while (!int.TryParse(Console.ReadLine(), out hours))
+                            {
+                                Console.WriteLine("Enter subject hours again:");
+                            }
+                            courses.Add(new Course(name, hours));
+
+                        }
+                        else
+                        {
+                            defultVAlu = "n";
                         }
 
-                        courses.Add(new Course(name, hours));
-
-                        Console.WriteLine("Do you want to add another subject? (y/n)");
-                        defultVAlu = Console.ReadLine();
                     }
 
                     // دمج المواد القديمة مع الجديدة
@@ -186,9 +194,9 @@ namespace OOP_Pro
            */
             else if (Return_User_Result.ToLower() == "3")
             {
-                var allStudents = FileManager.ReadStudentsFromText("Students.text");
+                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
 
-                Student.AssignGrade(allStudents);   
+                Student.AssignGrade(allStudents , coursesData);
 
                 FileManager.SaveStudentsToText(allStudents, "Students.text");
 
@@ -206,20 +214,12 @@ namespace OOP_Pro
            */
             else if (Return_User_Result.ToLower() == "4")
             {
+                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
 
+                GradeManager.riskandtopstudents(allStudents);
             }
             #endregion
-            /*5*/
-            #region Exit
-            /* 
-          5 =>  للخروج 
-           */
-            else if (Return_User_Result.ToLower() == "5")
-            {
-
-            }
-            #endregion
-
+            
 
         }
 
@@ -227,9 +227,9 @@ namespace OOP_Pro
 
 
 
-       #region Testing by omnia
+        #region Testing by omnia
 
-      
+
         #endregion
     }
 }

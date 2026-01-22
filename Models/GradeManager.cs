@@ -11,45 +11,47 @@ namespace OOP_Pro.Models
         #region GPA calculation 
         public static double CalculateGPA(Student student)
         {
-
-            int size = student.Courses.Count;
             double total = 0;
-            double hour = 0;
             double totalhour = 0;
-            for (int i = 0; i < size; i++)
+
+            foreach (var sc in student.Courses)
             {
-                double grade = student.Courses.ElementAt(i).Grade;
-                hour = student.Courses.ElementAt(i).Course.CreditHours;
-                totalhour += student.Courses.ElementAt(i).Course.CreditHours;
-
-
-                total += grade * hour;
-
-               
+                total += sc.Grade * sc.Course.CreditHours;
+                totalhour += sc.Course.CreditHours;
             }
+
             double gpa100 = Math.Round(total / totalhour);
             double gpa = gpa100 / 25;
-            Console.WriteLine($"The GPA of {student.Name}  is {gpa} .");
 
+            Console.WriteLine($"The GPA of {student.Name} is {gpa}");
             return gpa;
-        } 
+        }
+
 
         #endregion
-       
+
 
         #region Identify at-risk and top students
-        public static void riskandtopstudents(Student[] allstudents)
+        public static void riskandtopstudents(List<Student>students)
         {
 
-            foreach (var student in allstudents)
+            foreach (var student in students)
             {
+            FileManager.LoadStudentGradesFromText("Grades.txt", student);
+
+                if (student.Courses.Count == 0)
+                    continue;
+
                 double gpa = CalculateGPA(student);
+
                 if (gpa >= 3.6)
-                    Console.WriteLine($"{student.Name} is a Top Student");
+                    Console.WriteLine($"{student.Name} is a TOP student \n");
                 else if (gpa <= 2.4)
-                    Console.WriteLine($"{student.Name} is At-Risk");
+                    Console.WriteLine($"{student.Name} is at RISK \n");
+                else
+                    Console.WriteLine($"{student.Name} is in the average range\n");
             }
-        } 
+        }
         #endregion
 
 

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace OOP_Pro.Models
 {
@@ -27,20 +28,17 @@ namespace OOP_Pro.Models
 
 
         #region Assign grades 
-        public static void AssignGrade(List<Student> students)
+        public static void AssignGrade(List<Student> students, List<Course> courses)
         {
             foreach (Student student in students)
             {
-                Console.WriteLine($"\nStudent: {student.Name}");
+                Console.WriteLine($"\nStudent: {student.Name} \n");
 
-                if (student.Courses == null || student.Courses.Count == 0)
-                {
-                    Console.WriteLine("  No courses found for this student.");       // عشان لو طالب مش عنده كورسات يسكبه 
-                }
+                student.Courses.Clear();
 
-                foreach (StudentCourse sc in student.Courses)
+                foreach (var co in courses)
                 {
-                    Console.Write($"Enter grade for {sc.Course.Name}: ");
+                    Console.Write($"Enter grade for {co.Name}: ");
 
                     double grade;
                     while (!double.TryParse(Console.ReadLine(), out grade))
@@ -48,9 +46,16 @@ namespace OOP_Pro.Models
                         Console.Write("Invalid grade, enter again: ");
                     }
 
-                    sc.Grade = grade;
+                    student.Courses.Add(new StudentCourse(co, grade));
                 }
+
+                FileManager.SaveStudentGradesToText("Grades.txt", student);
+
+                GradeManager.CalculateGPA(student);
             }
+
+
+
         }
 
         #endregion

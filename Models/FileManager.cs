@@ -82,7 +82,47 @@ namespace OOP_Pro.Models
 
         #endregion
 
+        #region StudentGrade
+        public static void SaveStudentGradesToText(
+    string filePath,
+    Student student)
+        {
+            List<string> lines = new List<string>();
 
+            foreach (var sc in student.Courses)
+            {
+                lines.Add($"{student.Name}|{sc.Course.Name}|{sc.Course.CreditHours}|{sc.Grade}");
+            }
+
+            File.AppendAllLines(filePath, lines);
+        }
+
+        public static void LoadStudentGradesFromText(string filePath, Student student)
+        {
+            if (!File.Exists(filePath))
+                return;
+
+            var lines = File.ReadAllLines(filePath);
+
+            student.Courses.Clear();
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split('|');
+
+                string studentName = parts[0];
+                string courseName = parts[1];
+                int hours = int.Parse(parts[2]);
+                double grade = double.Parse(parts[3]);
+
+                if (studentName == student.Name)
+                {
+                    var course = new Course(courseName, hours);
+                    student.Courses.Add(new StudentCourse(course, grade));
+                }
+            }
+        }
+        #endregion
 
     }
 }
