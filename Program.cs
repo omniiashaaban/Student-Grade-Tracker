@@ -23,7 +23,8 @@ namespace OOP_Pro
             Console.WriteLine(" 2 -  Student ?");
             Console.WriteLine(" 3 - Assign Grade?");
             Console.WriteLine(" 4 - risk and top students?");
-            Console.WriteLine(" 5 - Exit");
+            Console.WriteLine(" 5 - attend Course?");
+            Console.WriteLine(" 6 - Exit");
 
             Console.WriteLine("\n");
 
@@ -196,7 +197,7 @@ namespace OOP_Pro
             {
                 var allStudents = FileManager.ReadStudentsFromText("Students.txt");
 
-                Student.AssignGrade(allStudents , coursesData);
+                Student.AssignGrade(allStudents, coursesData);
 
                 FileManager.SaveStudentsToText(allStudents, "Students.text");
 
@@ -219,7 +220,22 @@ namespace OOP_Pro
                 GradeManager.riskandtopstudents(allStudents);
             }
             #endregion
-            
+
+            /*5*/
+            #region Attendance
+
+            /* 
+   5 =>  الحضور 
+     */
+            else if (Return_User_Result.ToLower() == "5")
+            {
+                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
+
+                GradeManager.riskandtopstudents(allStudents);
+
+
+            }
+#endregion
 
         }
 

@@ -14,15 +14,19 @@ namespace OOP_Pro.Models
         public string Name { get; set; } // اسم الطالب 
 
         public List<StudentCourse> Courses;     // اسماء الكورسات 
-        public int Attendance { get; set; } 
+        public int Attendance { get; set; }
 
+        public int TotalAbsenceDays { get; set; }  //اجمالي ايام الغياب 
+        public List<DateTime> AbsenceDates { get; set; }  //تواريخ الغياب
         public Student(string name)
         {
             Id = _counter++;        // توليد ID تلقائي
 
             Name = name;
             Courses = new List<StudentCourse>();  
-            Attendance = 0;                       
+            Attendance = 0;
+            TotalAbsenceDays = 0;
+            AbsenceDates = new List<DateTime>();
         }
 
 
