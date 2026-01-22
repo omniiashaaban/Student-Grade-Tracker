@@ -39,8 +39,8 @@ namespace OOP_Pro
             List<Student> student = new List<Student>();
 
             // قراءة المواد من الشيت
-            var coursesData = FileManager.ReadCoursesFromExcel("Courses.xlsx");// ليست للكورسات 
-            var StudentsData = FileManager.ReadStudentsFromExcel("Students.xlsx"); // ليست للطلاب
+            var coursesData = FileManager.ReadCoursesFromText("Courses.txt");
+            var StudentsData = FileManager.ReadStudentsFromText("Courses.txt");
 
 
 
@@ -85,30 +85,30 @@ namespace OOP_Pro
                         defultVAlu = Console.ReadLine();
                     }
 
+                    // دمج المواد القديمة مع الجديدة
+                    courses.AddRange(coursesData);
 
-                    courses.AddRange(coursesData);// دمج المواد القديمة والجديدة
-
-                    // حفظ كل المواد في Excel
-                    FileManager.SaveCoursesToExcel(courses, "Courses.xlsx");
+                    // حفظ في ملف Text
+                    FileManager.SaveCoursesToText(courses, "Courses.txt");
 
                     Console.WriteLine("Courses saved successfully.\n");
                 }
                 // لو كتب 2 هيعرض الكورسات  
-                else
+                else if (CourseChois == "2")
                 {
-
-                    Console.WriteLine("Courses from Excel:");
+                    Console.WriteLine("Courses from Text File:");
                     Console.WriteLine("\n");
 
-                    var allCourses = FileManager.ReadCoursesFromExcel("Courses.xlsx");
+                    var allCourses = FileManager.ReadCoursesFromText("Courses.txt");
                     foreach (var item in allCourses)
                     {
-                        Console.WriteLine($"Course Name: {item.Name}  ||  Hours:{item.CreditHours}");
+                        Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours}");
                     }
                 }
             }
 
             #endregion
+
             /*2*/
             #region student
             /* 
@@ -118,15 +118,14 @@ namespace OOP_Pro
 
             else if (Return_User_Result.ToLower() == "2")
             {
-                var oldStudents = FileManager.ReadStudentsFromExcel("Students.xlsx");
+                // قراءة الطلاب القدام
+                var oldStudents = FileManager.ReadStudentsFromText("Students.txt");
 
                 Console.WriteLine("1 - Add Student ");
                 Console.WriteLine("2 - All Students ");
                 Console.WriteLine("\n");
 
                 string student_Choise = Console.ReadLine();
-
-
 
                 /*
                  1 => اضافة طلاب 
@@ -137,18 +136,13 @@ namespace OOP_Pro
 
                     while (inputstudent.ToLower() == "y")
                     {
-
                         Console.WriteLine("\n");
-
                         Console.WriteLine("Student Name : ");
                         var studentname = Console.ReadLine();
 
-                        if (studentname != "end")
+                        if (studentname.ToLower() != "end")
                         {
-
                             student.Add(new Student(studentname));
-                            FileManager.SaveStudentsToExcel(student, "Students.xlsx");
-
                         }
                         else
                         {
@@ -156,40 +150,34 @@ namespace OOP_Pro
                         }
                     }
 
+                    // دمج الطلاب الجدد مع القدام
+                    student.AddRange(oldStudents);
 
+                    // حفظ في ملف Text
+                    FileManager.SaveStudentsToText(student, "Students.txt");
 
                     Console.WriteLine("Students saved successfully.\n");
                 }
+
                 /*
-               2 => استعراض الطلاب 
-               */
+                 2 => استعراض الطلاب 
+                 */
                 else if (student_Choise == "2")
                 {
-                    // قراءة وعرض الطلاب من Excel
-                    var allStudents = FileManager.ReadStudentsFromExcel("Students.xlsx");
-                    Console.WriteLine("Students from Excel:");
+                    var allStudents = FileManager.ReadStudentsFromText("Students.txt");
+
+                    Console.WriteLine("Students from Text File:");
                     Console.WriteLine("\n");
 
                     foreach (var s in allStudents)
                     {
-                     
-                        
                         Console.WriteLine($"Student Name => {s.Name}");
-
-
-
-
                     }
                 }
-
-
-
-
-
-
             }
 
             #endregion
+
             /*3*/
             #region Assign Grade
 
@@ -198,11 +186,11 @@ namespace OOP_Pro
            */
             else if (Return_User_Result.ToLower() == "3")
             {
-                var allStudents = FileManager.ReadStudentsFromExcel("Students.xlsx");
+                var allStudents = FileManager.ReadStudentsFromText("Students.text");
 
                 Student.AssignGrade(allStudents);   
 
-                FileManager.SaveStudentsToExcel(allStudents, "Students.xlsx");
+                FileManager.SaveStudentsToText(allStudents, "Students.text");
 
                 Console.WriteLine("\nGrades saved successfully.");
 
@@ -223,7 +211,6 @@ namespace OOP_Pro
             #endregion
             /*5*/
             #region Exit
-
             /* 
           5 =>  للخروج 
            */
@@ -239,86 +226,6 @@ namespace OOP_Pro
 
 
 
-        #region Courses
-
-
-
-        //Console.WriteLine("Do you want to add a subject? (y/n)");
-        //string input = Console.ReadLine();
-
-        //if (input.ToLower() != "n")
-        //{
-        //    // إضافة مواد جديدة
-
-        //    while (input.ToLower() == "y")
-        //    {
-        //        Console.WriteLine("Enter subject name:");
-        //        string name = Console.ReadLine();
-
-        //        Console.WriteLine("Enter subject hours:");
-        //        int hours;
-
-        //        while (!int.TryParse(Console.ReadLine(), out hours))
-        //        {
-        //            Console.WriteLine("Enter subject hours again:");
-        //        }
-
-        //        courses.Add(new Course(name, hours));
-
-        //        Console.WriteLine("Do you want to add another subject? (y/n)");
-        //        input = Console.ReadLine();
-        //    }
-
-
-        //    courses.AddRange(coursesData);// دمج المواد القديمة والجديدة
-
-        //    // حفظ كل المواد في Excel
-        //    FileManager.SaveCoursesToExcel(courses, "Courses.xlsx");
-
-        //    Console.WriteLine("Courses saved successfully.\n");
-
-        //    // عرض المواد من Excel
-
-        //    Console.WriteLine("Courses from Excel:");
-        //    var allCourses = FileManager.ReadCoursesFromExcel("Courses.xlsx");
-        //    foreach (var item in allCourses)
-        //    {
-        //        Console.WriteLine($"Course Name: {item.Name}  Hours:{item.CreditHours}");
-        //    }
-
-        //}
-        #endregion
-
-        #region Students
-        //Console.WriteLine("Do you want to add a Student? (y/n)");
-        //string inputstudent = Console.ReadLine();
-
-        //var oldStudents = FileManager.ReadStudentsFromExcel("Students.xlsx");
-
-        //while (inputstudent.ToLower() == "y")
-        //{
-
-        //    Console.WriteLine("StudentName : ");
-        //    var studentname = Console.ReadLine();
-
-
-        //    student.Add(new Student(studentname));
-
-        //    Console.WriteLine("Do you want to add another subject? (y/n)");
-        //    inputstudent = Console.ReadLine();
-        //}
-        //FileManager.SaveStudentsToExcel(student, "Students.xlsx");
-        //Console.WriteLine("Students saved successfully.\n");
-
-        //// قراءة وعرض الطلاب من Excel
-        //var allStudents = FileManager.ReadStudentsFromExcel("Students.xlsx");
-        //Console.WriteLine("Students from Excel:");
-        //foreach (var s in allStudents)
-        //{
-        //    Console.WriteLine($"Student Name: {s.Name}");
-        //}
-
-        #endregion
 
        #region Testing by omnia
 

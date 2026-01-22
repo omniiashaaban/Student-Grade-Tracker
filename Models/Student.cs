@@ -7,7 +7,9 @@ namespace OOP_Pro.Models
 {
     public class Student
     {
-        
+        private static int _counter = 1; // عداد للـ ID
+
+        public int Id { get; private set; }
         public string Name { get; set; } // اسم الطالب 
 
         public List<StudentCourse> Courses;     // اسماء الكورسات 
@@ -15,6 +17,8 @@ namespace OOP_Pro.Models
 
         public Student(string name)
         {
+            Id = _counter++;        // توليد ID تلقائي
+
             Name = name;
             Courses = new List<StudentCourse>();  
             Attendance = 0;                       

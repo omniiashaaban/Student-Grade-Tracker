@@ -8,120 +8,80 @@ namespace OOP_Pro.Models
     {
         #region Courses
 
-        public static List<Course> ReadCoursesFromExcel(string filePath)
+        public static List<Course> ReadCoursesFromText(string filePath)
         {
             List<Course> courses = new List<Course>();
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            if (!File.Exists(filePath))
+                return courses;
 
-            FileInfo file = new FileInfo(filePath);
-            using (ExcelPackage package = new ExcelPackage(file))
+            string[] lines = File.ReadAllLines(filePath);
+
+            foreach (string line in lines)
             {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                int rowCount = worksheet.Dimension.Rows;
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
 
-                for (int row = 2; row <= rowCount; row++)
-                {
-                    string name = worksheet.Cells[row, 1].Text;
-                    int creditHours = int.Parse(worksheet.Cells[row, 2].Text);
+                string[] parts = line.Split('|');
 
-                    courses.Add(new Course(name, creditHours));
-                }
+                string name = parts[0];
+                int creditHours = int.Parse(parts[1]);
+
+                courses.Add(new Course(name, creditHours));
             }
 
             return courses;
         }
-
-        // تسجيل اللبيانات في شيت اكسل 
-
-        public static void SaveCoursesToExcel(List<Course> courses, string filePath)
+        public static void SaveCoursesToText(List<Course> courses, string filePath)
         {
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            List<string> lines = new List<string>();
 
-            using (ExcelPackage package = new ExcelPackage())
+            foreach (var c in courses)
             {
-                var sheet = package.Workbook.Worksheets.Add("Courses");
-
-                // Header
-                sheet.Cells[1, 1].Value = "Course Name";
-                sheet.Cells[1, 2].Value = "Credit Hours";
-
-                int row = 2;
-                foreach (var c in courses)
-                {
-                    sheet.Cells[row, 1].Value = c.Name;
-                    sheet.Cells[row, 2].Value = c.CreditHours;
-                    row++;
-                }
-
-                package.SaveAs(new FileInfo(filePath));
+                lines.Add($"{c.Name}|{c.CreditHours}");
             }
+
+            File.WriteAllLines(filePath, lines);
         }
+
         #endregion
 
+
         #region Students
-        public static List<Student> ReadStudentsFromExcel(string filePath)
+
+        public static List<Student> ReadStudentsFromText(string filePath)
         {
             List<Student> students = new List<Student>();
 
             if (!File.Exists(filePath))
-            {
-                Console.WriteLine("Excel file not found.");
                 return students;
-            }
 
-            using (ExcelPackage package = new ExcelPackage(new FileInfo(filePath)))
+            string[] lines = File.ReadAllLines(filePath);
+
+            foreach (string line in lines)
             {
-                var sheet = package.Workbook.Worksheets[0];
-                int rows = sheet.Dimension.Rows;
-
-                for (int i = 2; i <= rows; i++)
+                if (!string.IsNullOrWhiteSpace(line))
                 {
-                    string name = sheet.Cells[i, 1].Text;
-                    if (!string.IsNullOrWhiteSpace(name))
-                        students.Add(new Student(name));
+                    students.Add(new Student(line.Trim()));
                 }
             }
 
             return students;
         }
-
-
-
- public static void SaveStudentsToExcel(List<Student> students, string filePath)
-{
-    FileInfo fileInfo = new FileInfo(filePath);
-
-    using (ExcelPackage package = fileInfo.Exists
-        ? new ExcelPackage(fileInfo)
-        : new ExcelPackage())
-    {
-        ExcelWorksheet sheet;
-
-        if (fileInfo.Exists && package.Workbook.Worksheets.Count > 0)
+        public static void SaveStudentsToText(List<Student> students, string filePath)
         {
-            sheet = package.Workbook.Worksheets[0];
-        }
-        else
-        {
-            sheet = package.Workbook.Worksheets.Add("Students");
-            sheet.Cells[1, 1].Value = "Student Name";
-        }
+            List<string> lines = new List<string>();
 
-        // آخر صف فيه بيانات
-        int row = sheet.Dimension?.End.Row + 1 ?? 2;
+            foreach (var s in students)
+            {
+                lines.Add(s.Name);
+            }
 
-        foreach (var s in students)
-        {
-            sheet.Cells[row, 1].Value = s.Name;
-            row++;
+            File.WriteAllLines(filePath, lines);
         }
-
-        package.SaveAs(fileInfo);
-    }
-}
 
         #endregion
+
 
 
     }
