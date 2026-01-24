@@ -8,6 +8,8 @@ namespace OOP_Pro.Models
     {
         public Course Course { get; set; }
         public double Grade     { get; set; }
+
+        public int NumberOfLeacturesAttended { get; set; } =0;
         public StudentCourse(Course course, double grade)
         {
             Course = course;

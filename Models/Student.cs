@@ -14,31 +14,26 @@ namespace OOP_Pro.Models
         public string Name { get; set; } // اسم الطالب 
 
         public List<StudentCourse> Courses;     // اسماء الكورسات 
-        public int Attendance { get; set; }
-
-        public int TotalAbsenceDays { get; set; }  //اجمالي ايام الغياب 
-        public List<DateTime> AbsenceDates { get; set; }  //تواريخ الغياب
         public Student(string name)
         {
             Id = _counter++;        // توليد ID تلقائي
 
             Name = name;
             Courses = new List<StudentCourse>();  
-            Attendance = 0;
-            TotalAbsenceDays = 0;
-            AbsenceDates = new List<DateTime>();
         }
 
 
 
         #region Assign grades 
-        public static void AssignGrade(List<Student> students, List<Course> courses)
+
+        public static void AssignGrade(List<Student> students, List<Course> courses, string gradesPath)
         {
             foreach (Student student in students)
             {
-                Console.WriteLine($"\nStudent: {student.Name} \n");
+                Console.WriteLine($"\nStudent: {student.Name}\n");
 
-                student.Courses.Clear();
+                // Load existing grades first بنعمل update بدل duplicate 
+                FileManager.LoadStudentGradesFromText(gradesPath, student);
 
                 foreach (var co in courses)
                 {
@@ -46,27 +41,32 @@ namespace OOP_Pro.Models
 
                     double grade;
                     while (!double.TryParse(Console.ReadLine(), out grade))
-                    {
                         Console.Write("Invalid grade, enter again: ");
-                    }
 
-                    student.Courses.Add(new StudentCourse(co, grade));
+                    // update existing or add new (preserve attendance)
+                    var existing = student.Courses.FirstOrDefault(sc =>
+                        sc.Course.Name.Equals(co.Name, StringComparison.OrdinalIgnoreCase));
+
+                    if (existing != null)
+                    {
+                        existing.Grade = grade;
+                        existing.Course.CreditHours = co.CreditHours;
+                        existing.Course.NumberOfLeactures = co.NumberOfLeactures;
+                    }
+                    else
+                    {
+                        student.Courses.Add(new StudentCourse(co, grade));
+                    }
                 }
 
-                FileManager.SaveStudentGradesToText("Grades.txt", student);
-
+                FileManager.SaveStudentGradesToText(gradesPath, student);
                 GradeManager.CalculateGPA(student);
             }
-
-
-
         }
 
         #endregion
 
-
-
-
+      
 
         public override string ToString()
         {
@@ -75,7 +75,7 @@ namespace OOP_Pro.Models
             if (Courses.Count == 0) coursesInfo = "No courses enrolled";
             else coursesInfo = string.Join(", ", Courses);
 
-            return $"Name: {Name}, Attendance: {Attendance}%, Courses: [{coursesInfo}]";
+            return $"Name: {Name}, Courses: [{coursesInfo}]";
         }
     }
 }

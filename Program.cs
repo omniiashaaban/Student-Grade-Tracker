@@ -1,253 +1,208 @@
-
 using OOP_Pro.Models;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Timers;
+using System.IO;
 
 namespace OOP_Pro
 {
     internal class Program
     {
-        /*  عملتها في 
-        Function 
-        علشان هنستخدمها اكتر من مرة 
-         */
-
-        /*Added by => Fathi          21-1-2026 : 10:34 */
         static string Questions()
         {
-
             Console.WriteLine("How Can i Help You ?");
-            Console.WriteLine(" 1 -  Course ? ");
-            Console.WriteLine(" 2 -  Student ?");
-            Console.WriteLine(" 3 - Assign Grade?");
-            Console.WriteLine(" 4 - risk and top students?");
-            Console.WriteLine(" 5 - attend Course?");
+            Console.WriteLine(" 1 - Course ? ");
+            Console.WriteLine(" 2 - Student ?");
+            Console.WriteLine(" 3 - Assign Grade ?");
+            Console.WriteLine(" 4 - Risk and top students ?");
+            Console.WriteLine(" 5 - Attend Course ?");
             Console.WriteLine(" 6 - Exit");
-
             Console.WriteLine("\n");
 
-            string USerChoise = Console.ReadLine();
-
-            return USerChoise;
+            return Console.ReadLine();
         }
-
 
         static void Main(string[] args)
         {
-            List<Course> courses = new List<Course>();
-            List<Student> student = new List<Student>();
-
-            // قراءة المواد من الشيت
-            var coursesData = FileManager.ReadCoursesFromText("Courses.txt");
-            var StudentsData = FileManager.ReadStudentsFromText("Courses.txt");
-
-
-
-            string Return_User_Result = Questions();
-
-
-            Console.WriteLine("\n");
-
-            var defultVAlu = "y"; // قيمة افتراضية لااضافة كورس
-            var inputstudent = "y"; // قيمة افتراضية لااضافة طالب 
-
-            /*1*/
-            #region Course
-
-            if (Return_User_Result.ToLower() == "1")
+            while (true)
             {
-                Console.WriteLine("1 - Add Course ");
-                Console.WriteLine("2 - All Courses ");
+                // Always read latest data from files
+                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+                string coursesPath = Path.Combine(basePath, "Courses.txt");
+                string studentsPath = Path.Combine(basePath, "Students.txt");
+                
+                var coursesData = FileManager.ReadCoursesFromText(coursesPath);
+                var studentsData = FileManager.ReadStudentsFromText(studentsPath);
+
+                string Return_User_Result = Questions();
                 Console.WriteLine("\n");
 
-                string CourseChois = Console.ReadLine();
+                // Exit
+                if (Return_User_Result == "6")
+                    break;
 
-                // لو كتب 1 هيضيف كورس 
-                if (CourseChois == "1")
+                var defultVAlu = "y";
+                var inputstudent = "y";
+
+                #region Course
+                if (Return_User_Result == "1")
                 {
-                    Console.WriteLine(" ( * ) To Exit Write =====> end   ");
+                    Console.WriteLine("1 - Add Course ");
+                    Console.WriteLine("2 - All Courses ");
+                    Console.WriteLine("\n");
 
-                    while (defultVAlu.ToLower() == "y")
+                    string CourseChois = Console.ReadLine();
+
+                    if (CourseChois == "1")
                     {
+                        List<Course> newCourses = new List<Course>();
 
-                        Console.WriteLine("Enter subject name:");
-                        string name = Console.ReadLine();
+                        Console.WriteLine(" ( * ) To Exit Write =====> end   ");
 
-                        if (name.ToLower() != "end")
+                        while (defultVAlu.ToLower() == "y")
                         {
-                            Console.WriteLine("Enter subject hours:");
-                            int hours;
+                            Console.WriteLine("Enter subject name:");
+                            string name = Console.ReadLine();
 
-                            while (!int.TryParse(Console.ReadLine(), out hours))
+                            if (name.ToLower() != "end")
                             {
-                                Console.WriteLine("Enter subject hours again:");
+                                Console.WriteLine("Enter subject hours:");
+                                int hours;
+                                while (!int.TryParse(Console.ReadLine(), out hours))
+                                    Console.WriteLine("Enter subject hours again:");
+
+                                Console.WriteLine("Enter Lectures Number:");
+                                int lectures;
+                                while (!int.TryParse(Console.ReadLine(), out lectures))
+                                    Console.WriteLine("Enter Lectures Number again:");
+
+                                newCourses.Add(new Course(name, hours, lectures));
                             }
-                            courses.Add(new Course(name, hours));
-
-                        }
-                        else
-                        {
-                            defultVAlu = "n";
+                            else
+                            {
+                                defultVAlu = "n";
+                            }
                         }
 
+                        // merge old + new
+                        newCourses.AddRange(coursesData);
+
+                        FileManager.SaveCoursesToText(newCourses, coursesPath);
+                        Console.WriteLine("Courses saved successfully.\n");
+                        Console.ReadKey();
                     }
+                    else if (CourseChois == "2")
+                    {
+                        Console.WriteLine("Courses from Text File:\n");
+                        foreach (var item in coursesData)
+                            Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours} || {item.NumberOfLeactures}");
 
-                    // دمج المواد القديمة مع الجديدة
-                    courses.AddRange(coursesData);
-
-                    // حفظ في ملف Text
-                    FileManager.SaveCoursesToText(courses, "Courses.txt");
-
-                    Console.WriteLine("Courses saved successfully.\n");
+                        Console.ReadKey();
+                    }
                 }
-                // لو كتب 2 هيعرض الكورسات  
-                else if (CourseChois == "2")
+                #endregion
+
+                #region Student
+                else if (Return_User_Result == "2")
                 {
-                    Console.WriteLine("Courses from Text File:");
+                    Console.WriteLine("1 - Add Student ");
+                    Console.WriteLine("2 - All Students ");
                     Console.WriteLine("\n");
 
-                    var allCourses = FileManager.ReadCoursesFromText("Courses.txt");
-                    foreach (var item in allCourses)
+                    string student_Choise = Console.ReadLine();
+
+                    if (student_Choise == "1")
                     {
-                        Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours}");
+                        List<Student> newStudents = new List<Student>();
+
+                        Console.WriteLine(" ( * ) To Exit Write =====> end   ");
+
+                        while (inputstudent.ToLower() == "y")
+                        {
+                            Console.WriteLine("\nStudent Name : ");
+                            var studentname = Console.ReadLine();
+
+                            if (studentname.ToLower() != "end")
+                                newStudents.Add(new Student(studentname));
+                            else
+                                inputstudent = "n";
+                        }
+
+                        // merge old + new
+                        newStudents.AddRange(studentsData);
+
+                        FileManager.SaveStudentsToText(newStudents, studentsPath);
+                        Console.WriteLine("Students saved successfully.\n");
+                        Console.ReadKey();
+                    }
+                    else if (student_Choise == "2")
+                    {
+                        Console.WriteLine("Students from Text File:\n");
+                        foreach (var s in studentsData)
+                            Console.WriteLine($"Student Name => {s.Name}");
+
+                        Console.ReadKey();
                     }
                 }
-            }
+                #endregion
 
-            #endregion
-
-            /*2*/
-            #region student
-            /* 
-             عملت هنا 
-             else if  = > علشان هيكون عندي اكتر من Condition 
-             */
-
-            else if (Return_User_Result.ToLower() == "2")
-            {
-                // قراءة الطلاب القدام
-                var oldStudents = FileManager.ReadStudentsFromText("Students.txt");
-
-                Console.WriteLine("1 - Add Student ");
-                Console.WriteLine("2 - All Students ");
-                Console.WriteLine("\n");
-
-                string student_Choise = Console.ReadLine();
-
-                /*
-                 1 => اضافة طلاب 
-                 */
-                if (student_Choise == "1")
+                #region Assign Grade
+                else if (Return_User_Result == "3")
                 {
-                    Console.WriteLine(" ( * ) To Exit Write =====> end   ");
+                    
+                    string gradesPath = Path.Combine(basePath, "Grades.txt");
+                    Student.AssignGrade(studentsData, coursesData, gradesPath);
 
-                    while (inputstudent.ToLower() == "y")
+                    Console.WriteLine("\nGrades saved successfully.");
+                    Console.ReadKey();
+                }
+                #endregion
+
+                #region risk and top students
+                else if (Return_User_Result == "4")
+                {
+                    GradeManager.riskandtopstudents(studentsData);
+                    Console.ReadKey();
+                }
+                #endregion
+
+                #region Attendance
+                else if (Return_User_Result == "5")
+                {
+                    try
                     {
+                        Console.WriteLine("1 - Take Attendance");
+                        Console.WriteLine("2 - Show Attendance (One Student)");
+                        Console.WriteLine("3 - Show Attendance (All Students)");
                         Console.WriteLine("\n");
-                        Console.WriteLine("Student Name : ");
-                        var studentname = Console.ReadLine();
 
-                        if (studentname.ToLower() != "end")
-                        {
-                            student.Add(new Student(studentname));
-                        }
+                        string attChoice = Console.ReadLine();
+                        string attendancePath = Path.Combine(basePath, "Attendance.txt");
+
+                        if (attChoice == "1")
+                            AttendanceManager.TakeAttendance(studentsData, coursesData, attendancePath);
+                        else if (attChoice == "2")
+                            AttendanceManager.ShowAttendanceForSelectedStudent(studentsData, attendancePath);
+                        else if (attChoice == "3")
+                            AttendanceManager.ShowAttendanceForAllStudents(studentsData, attendancePath);
                         else
                         {
-                            inputstudent = "n";
+                            Console.WriteLine("Invalid choice.");
+                            Console.ReadKey();
                         }
                     }
-
-                    // دمج الطلاب الجدد مع القدام
-                    student.AddRange(oldStudents);
-
-                    // حفظ في ملف Text
-                    FileManager.SaveStudentsToText(student, "Students.txt");
-
-                    Console.WriteLine("Students saved successfully.\n");
-                }
-
-                /*
-                 2 => استعراض الطلاب 
-                 */
-                else if (student_Choise == "2")
-                {
-                    var allStudents = FileManager.ReadStudentsFromText("Students.txt");
-
-                    Console.WriteLine("Students from Text File:");
-                    Console.WriteLine("\n");
-
-                    foreach (var s in allStudents)
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Student Name => {s.Name}");
+                        Console.WriteLine("Attendance crashed بسبب:");
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.StackTrace);
+                        Console.ReadKey();
                     }
                 }
+
+                #endregion
+
+                Console.Clear();
             }
-
-            #endregion
-
-            /*3*/
-            #region Assign Grade
-
-            /* 
-          3 =>  هتكون لادخال الدرجات  
-           */
-            else if (Return_User_Result.ToLower() == "3")
-            {
-                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
-
-                Student.AssignGrade(allStudents, coursesData);
-
-                FileManager.SaveStudentsToText(allStudents, "Students.text");
-
-                Console.WriteLine("\nGrades saved successfully.");
-
-
-            }
-
-            #endregion
-            /*4*/
-            #region risk and top students?
-
-            /* 
-          4 =>  هتكون ترتيب الطلاب حسب  الدرجات  
-           */
-            else if (Return_User_Result.ToLower() == "4")
-            {
-                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
-
-                GradeManager.riskandtopstudents(allStudents);
-            }
-            #endregion
-
-            /*5*/
-            #region Attendance
-
-            /* 
-   5 =>  الحضور 
-     */
-            else if (Return_User_Result.ToLower() == "5")
-            {
-                var allStudents = FileManager.ReadStudentsFromText("Students.txt");
-
-                GradeManager.riskandtopstudents(allStudents);
-
-
-            }
-#endregion
-
         }
-
-
-
-
-
-        #region Testing by omnia
-
-
-        #endregion
     }
 }
-
-
