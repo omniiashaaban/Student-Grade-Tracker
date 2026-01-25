@@ -48,8 +48,6 @@ namespace OOP_Pro.Models
                     if (existing != null)
                     {
                         existing.Grade = grade;
-                        //existing.Course.CreditHours = co.CreditHours;
-                        //existing.Course.NumberOfLeactures = co.NumberOfLeactures;
                     }
                     else
                     {
