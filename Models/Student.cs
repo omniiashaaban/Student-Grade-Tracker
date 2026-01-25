@@ -32,7 +32,6 @@ namespace OOP_Pro.Models
             {
                 Console.WriteLine($"\nStudent: {student.Name}\n");
 
-                // Load existing grades first بنعمل update بدل duplicate 
                 FileManager.LoadStudentGradesFromText(gradesPath, student);
 
                 foreach (var co in courses)
@@ -43,15 +42,14 @@ namespace OOP_Pro.Models
                     while (!double.TryParse(Console.ReadLine(), out grade))
                         Console.Write("Invalid grade, enter again: ");
 
-                    // update existing or add new (preserve attendance)
                     var existing = student.Courses.FirstOrDefault(sc =>
                         sc.Course.Name.Equals(co.Name, StringComparison.OrdinalIgnoreCase));
 
                     if (existing != null)
                     {
                         existing.Grade = grade;
-                        existing.Course.CreditHours = co.CreditHours;
-                        existing.Course.NumberOfLeactures = co.NumberOfLeactures;
+                        //existing.Course.CreditHours = co.CreditHours;
+                        //existing.Course.NumberOfLeactures = co.NumberOfLeactures;
                     }
                     else
                     {

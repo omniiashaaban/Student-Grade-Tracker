@@ -107,6 +107,7 @@ namespace OOP_Pro.Models
             Console.WriteLine($"\nAttendance Report for {student.Name}:\n");
 
             var attendedCourses = student.Courses.Where(sc => sc.NumberOfLeacturesAttended > 0).ToList();
+
             if (attendedCourses.Count == 0)
             {
                 Console.WriteLine("No attendance records.");
@@ -152,7 +153,18 @@ namespace OOP_Pro.Models
 
                 foreach (var sc in attendedCourses)
                 {
-                    Console.WriteLine($"  - {sc.Course.Name}: {sc.NumberOfLeacturesAttended}/{sc.Course.NumberOfLeactures}");
+                    int totalLectures = sc.Course.NumberOfLeactures;
+                    int attended = sc.NumberOfLeacturesAttended;
+
+                    if (totalLectures > 0)
+                    {
+                        double attendancePercentage = (double)attended / totalLectures * 100;
+                        Console.WriteLine($"{sc.Course.Name}: {attended}/{totalLectures} ({attendancePercentage:F2}%)");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{sc.Course.Name}: {attended}/Unknown total lectures");
+                    }
                 }
 
                 Console.WriteLine();

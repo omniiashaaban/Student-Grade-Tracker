@@ -6,7 +6,7 @@ using System.Text;
 
 namespace OOP_Pro.Models
 {
-      public class FileManager
+    public class FileManager
     {
         #region Courses
 
@@ -50,7 +50,10 @@ namespace OOP_Pro.Models
 
             foreach (var c in courses)
             {
+
                 lines.Add($"{c.Name}|{c.CreditHours}|{c.NumberOfLeactures}");
+                //lines.Add((s) new Course(c.Name, c.CreditHours, c.NumberOfLeactures));
+
             }
 
             File.WriteAllLines(filePath, lines);
@@ -127,11 +130,11 @@ namespace OOP_Pro.Models
             // don't clear -> preserve attendance
             foreach (var line in lines)
             {
-                if (string.IsNullOrWhiteSpace(line)) 
+                if (string.IsNullOrWhiteSpace(line))
                     continue;
 
                 var parts = line.Split('|');
-                if (parts.Length < 5) 
+                if (parts.Length < 5)
                     continue; // avoid crash
 
                 string studentName = parts[0];

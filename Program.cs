@@ -10,11 +10,13 @@ namespace OOP_Pro
         static string Questions()
         {
             Console.WriteLine("How Can i Help You ?");
+
             Console.WriteLine(" 1 - Course ? ");
             Console.WriteLine(" 2 - Student ?");
             Console.WriteLine(" 3 - Assign Grade ?");
             Console.WriteLine(" 4 - Risk and top students ?");
             Console.WriteLine(" 5 - Attend Course ?");
+            Console.WriteLine(" 7 - Calc GPA Course ?");
             Console.WriteLine(" 6 - Exit");
             Console.WriteLine("\n");
 
@@ -25,7 +27,6 @@ namespace OOP_Pro
         {
             while (true)
             {
-                // Always read latest data from files
                 string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
                 string coursesPath = Path.Combine(basePath, "Courses.txt");
                 string studentsPath = Path.Combine(basePath, "Students.txt");
@@ -94,7 +95,7 @@ namespace OOP_Pro
                     {
                         Console.WriteLine("Courses from Text File:\n");
                         foreach (var item in coursesData)
-                            Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours} || {item.NumberOfLeactures}");
+                            Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours} || Lectures Count : {item.NumberOfLeactures}");
 
                         Console.ReadKey();
                     }
@@ -154,6 +155,7 @@ namespace OOP_Pro
 
                     Console.WriteLine("\nGrades saved successfully.");
                     Console.ReadKey();
+
                 }
                 #endregion
 
@@ -192,7 +194,7 @@ namespace OOP_Pro
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Attendance crashed بسبب:");
+                        Console.WriteLine("Attendance crashed Becouse:");
                         Console.WriteLine(ex.Message);
                         Console.WriteLine(ex.StackTrace);
                         Console.ReadKey();
