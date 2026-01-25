@@ -131,7 +131,7 @@ namespace OOP_Pro.Models
             for (int i = 0; i < students.Count; i++)
                 Console.WriteLine($"{i + 1}- {students[i].Name}");
 
-            int index = ReadInt("Choose number: ", 1, students.Count) - 1;
+            int index = ReadInt( 1, students.Count) - 1;
             return students[index];
         }
 
@@ -141,14 +141,15 @@ namespace OOP_Pro.Models
             for (int i = 0; i < courses.Count; i++)
                 Console.WriteLine($"{i + 1}- {courses[i].Name}");
 
-            int index = ReadInt("Choose number: ", 1, courses.Count) - 1;
+            int index = ReadInt(" 1, courses.Count) - 1;
             return courses[index];
         }
 
-        private static int ReadInt(string message, int min, int max)
+        private static int ReadInt( int min, int max)
         {
             int value;
-            Console.Write(message);
+            Console.Write("Choose number: ");
+
 
             while (!int.TryParse(Console.ReadLine(), out value) || value < min || value > max)
                 Console.Write($"Enter number between {min} and {max}: ");
