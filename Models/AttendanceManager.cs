@@ -141,7 +141,7 @@ namespace OOP_Pro.Models
             for (int i = 0; i < courses.Count; i++)
                 Console.WriteLine($"{i + 1}- {courses[i].Name}");
 
-            int index = ReadInt(" 1, courses.Count) - 1;
+            int index = ReadInt( 1, courses.Count) - 1;
             return courses[index];
         }
 
