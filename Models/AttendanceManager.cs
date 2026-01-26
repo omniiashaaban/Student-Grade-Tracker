@@ -21,7 +21,7 @@ namespace OOP_Pro.Models
             if (student.Courses == null)
                 student.Courses = new List<StudentCourse>();
 
-            FileManager.LoadStudentAttendanceFromText(attendancePath, student);
+            FileManager.LoadStudentAttendanceFromText(attendancePath, student ,courses);
 
             var studentCourse = student.Courses
                 .FirstOrDefault(sc => sc.Course.Name.Equals(course.Name, StringComparison.OrdinalIgnoreCase));
@@ -61,13 +61,16 @@ namespace OOP_Pro.Models
                 Console.ReadKey();
                 return;
             }
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string coursesPath = Path.Combine(basePath, "Courses.txt");
+            var allCourses = FileManager.ReadCoursesFromText(coursesPath);
 
             Student student = SelectStudent(students);
 
             if (student.Courses == null)
                 student.Courses = new List<StudentCourse>();
 
-            FileManager.LoadStudentAttendanceFromText(attendancePath, student);
+            FileManager.LoadStudentAttendanceFromText(attendancePath, student, allCourses);
 
             Console.WriteLine($"\nAttendance for {student.Name}:");
 
@@ -112,8 +115,10 @@ namespace OOP_Pro.Models
             {
                 if (student.Courses == null)
                     student.Courses = new List<StudentCourse>();
-
-                FileManager.LoadStudentAttendanceFromText(attendancePath, student);
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string coursesPath = Path.Combine(basePath, "Courses.txt");
+                var allCourses = FileManager.ReadCoursesFromText(coursesPath);
+                FileManager.LoadStudentAttendanceFromText(attendancePath, student, allCourses);
 
                 Console.WriteLine($"\nStudent: {student.Name}");
 

@@ -8,28 +8,67 @@ namespace OOP_Pro.Models
     {
 
 
-        #region GPA calculation 
-        public static double CalculateGPA(Student student)
-        {
-            double total = 0;
-            double totalhour = 0;
+        //#region GPA calculation 
+        //public static double CalculateGPA(Student student)
+        //{
+        //    double total = 0;
+        //    double totalhour = 0;
 
-            foreach (var sc in student.Courses)
+        //    foreach (var sc in student.Courses)
+        //    {
+        //        total += sc.Grade * sc.Course.CreditHours;
+        //        totalhour += sc.Course.CreditHours;
+        //    }
+
+        //    double gpa100 = Math.Round(total / totalhour);
+        //    double gpa = gpa100 / 25;
+
+        //    Console.WriteLine($"The GPA of {student.Name} is {gpa}");
+        //    return gpa;
+        //}
+
+
+        //#endregion
+
+     
+            // GPA لطالب واحد
+            public static double CalculateGPA(Student student)
             {
-                total += sc.Grade * sc.Course.CreditHours;
-                totalhour += sc.Course.CreditHours;
+                if (student.Courses == null || student.Courses.Count == 0)
+                {
+                    Console.WriteLine($"{student.Name} has no registered courses.");
+                    return 0;
+                }
+
+                double totalPoints = 0;
+                double totalHours = 0;
+
+                foreach (var sc in student.Courses)
+                {
+                    totalPoints += sc.Grade * sc.Course.CreditHours;
+                    totalHours += sc.Course.CreditHours;
+                }
+
+                if (totalHours == 0)
+                    return 0;
+
+                double gpa = Math.Round((totalPoints / totalHours) / 25, 2);
+
+                Console.WriteLine($"The GPA of {student.Name} is {gpa}");
+                return gpa;
             }
 
-            double gpa100 = Math.Round(total / totalhour);
-            double gpa = gpa100 / 25;
+            // GPA لكل الطلاب
+            public static void CalculateGPA(List<Student> students)
+            {
+                Console.Clear();
+                Console.WriteLine("Students GPA:\n");
 
-            Console.WriteLine($"The GPA of {student.Name} is {gpa}");
-            return gpa;
-        }
-
-
-        #endregion
-
+                foreach (var student in students)
+                {
+                    CalculateGPA(student);
+                }
+            }
 
         #region Identify at-risk and top students
         public static void riskandtopstudents(List<Student>students)

@@ -44,7 +44,6 @@ namespace OOP_Pro
                 if (choice == "8")
                     break;
 
-                #region Course
                 if (choice == "1")
                 {
                     Console.WriteLine("1 - Add Course");
@@ -63,14 +62,6 @@ namespace OOP_Pro
                         {
                             Console.Write("Course Name: ");
                             string name = Console.ReadLine();
-                            if (string.IsNullOrWhiteSpace(name) ||
-                     !name.All(c => (c >= 'A' && c <= 'Z') ||
-                                    (c >= 'a' && c <= 'z') ||
-                                     c == ' '))
-                            {
-                                Console.WriteLine("Invalid course name. English letters only.");
-                                continue;
-                            }
                             if (name.ToLower() == "end") break;
 
                             Console.Write("Credit Hours: ");
@@ -98,7 +89,6 @@ namespace OOP_Pro
                         Console.ReadKey();
                     }
                 }
-                #endregion
 
                 #region Student
                 else if (choice == "2")
@@ -118,14 +108,7 @@ namespace OOP_Pro
                         {
                             Console.Write("Student Name: ");
                             string name = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(name) &&
-    name.All(c => (c >= 'A' && c <= 'Z') ||
-                  (c >= 'a' && c <= 'z') ||
-                   c == ' '))
-                            {
-                                name = name.Trim(); 
-                                break;
-                            }
+                      
                             if (name.ToLower() == "end") break;
 
                             newStudents.Add(new Student(name));
@@ -224,6 +207,13 @@ namespace OOP_Pro
                 else if (choice == "6")
                 {
                     GradeManager.riskandtopstudents(studentsData);
+                    Console.ReadKey();
+                }
+                #endregion
+                #region Calc GPA
+                else if (choice == "7")
+                {
+                    GradeManager.CalculateGPA(studentsData);
                     Console.ReadKey();
                 }
                 #endregion

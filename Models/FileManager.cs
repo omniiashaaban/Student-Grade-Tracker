@@ -191,7 +191,7 @@ namespace OOP_Pro.Models
 
 
 
-        public static void LoadStudentAttendanceFromText(string filePath, Student student)
+        public static void LoadStudentAttendanceFromText(string filePath, Student student, List<Course> allCourses)
         {
             if (!File.Exists(filePath))
                 return;
@@ -225,13 +225,27 @@ namespace OOP_Pro.Models
                 }
                 else
                 {
-                    // fallback if not found (course details unknown here)
-                    var course = new Course(courseName, 0, 0);
-                    var sc = new StudentCourse(course, 0)
+                    // البحث عن الكورس الأصلي في كل الكورسات
+                    var actualCourse = allCourses.FirstOrDefault(c =>
+                        c.Name.Trim().Equals(courseName, StringComparison.OrdinalIgnoreCase));
+
+                    if (actualCourse != null)
                     {
-                        NumberOfLeacturesAttended = attendedLectures
-                    };
-                    student.Courses.Add(sc);
+                        var sc = new StudentCourse(actualCourse, 0)
+                        {
+                            NumberOfLeacturesAttended = attendedLectures
+                        };
+                        student.Courses.Add(sc);
+                    }
+                    else
+                    {
+                        // fallback لو مش لاقي الكورس
+                        var sc = new StudentCourse(new Course(courseName, 0, 0), 0)
+                        {
+                            NumberOfLeacturesAttended = attendedLectures
+                        };
+                        student.Courses.Add(sc);
+                    }
                 }
             }
         }
