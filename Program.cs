@@ -1,4 +1,4 @@
-using OOP_Pro.Models;
+﻿using OOP_Pro.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,6 +63,14 @@ namespace OOP_Pro
                         {
                             Console.Write("Course Name: ");
                             string name = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(name) ||
+                     !name.All(c => (c >= 'A' && c <= 'Z') ||
+                                    (c >= 'a' && c <= 'z') ||
+                                     c == ' '))
+                            {
+                                Console.WriteLine("Invalid course name. English letters only.");
+                                continue;
+                            }
                             if (name.ToLower() == "end") break;
 
                             Console.Write("Credit Hours: ");
@@ -110,6 +118,14 @@ namespace OOP_Pro
                         {
                             Console.Write("Student Name: ");
                             string name = Console.ReadLine();
+                            if (!string.IsNullOrWhiteSpace(name) &&
+    name.All(c => (c >= 'A' && c <= 'Z') ||
+                  (c >= 'a' && c <= 'z') ||
+                   c == ' '))
+                            {
+                                name = name.Trim(); 
+                                break;
+                            }
                             if (name.ToLower() == "end") break;
 
                             newStudents.Add(new Student(name));
@@ -166,9 +182,21 @@ namespace OOP_Pro
                 #region Assign Grade
                 else if (choice == "4")
                 {
-                    Student.AssignGrade(studentsData, coursesData, gradesPath);
-                    Console.WriteLine("Grades saved.");
-                    Console.ReadKey();
+                    Console.WriteLine("1 - One Student");
+                    Console.WriteLine("2 - All Students");
+               var Co=      Console.ReadLine();
+                    if (Co == "1")
+                    {
+                        Student.AssignGradeForOneStudent(studentsData, coursesData, gradesPath);
+
+                    }
+                    else if (Co == "2")
+                            {
+                                Student.AssignGrade(studentsData, coursesData, gradesPath);
+                                Console.WriteLine("Grades saved.");
+                                Console.ReadKey();
+                            }
+                  
                 }
                 #endregion
 

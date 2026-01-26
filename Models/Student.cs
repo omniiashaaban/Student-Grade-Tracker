@@ -25,6 +25,9 @@ namespace OOP_Pro.Models
 
 
         #region Assign grades 
+
+
+
         public static void AssignGrade(List<Student> students,List<Course> courses, string gradesPath)
         {
             foreach (Student student in students)
@@ -65,7 +68,58 @@ namespace OOP_Pro.Models
         }
         #endregion
 
+        public static void AssignGradeForOneStudent(
+    List<Student> students,
+    List<Course> courses,
+    string gradesPath
+)
+        {
+            Console.Clear();
+            Console.WriteLine("Choose Student:\n");
 
+            // عرض كل الطلاب
+            for (int i = 0; i < students.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {students[i].Name}");
+            }
+
+            Console.Write("\nEnter student number: ");
+            int choice;
+
+            while (!int.TryParse(Console.ReadLine(), out choice) ||
+                   choice < 1 || choice > students.Count)
+            {
+                Console.Write("Invalid choice, try again: ");
+            }
+
+            Student student = students[choice - 1];
+
+            Console.Clear();
+            Console.WriteLine($"Assigning grades for: {student.Name}\n");
+
+            FileManager.LoadStudentGradesFromText(gradesPath, student);
+
+            foreach (var sc in student.Courses)
+            {
+                Console.Write($"Enter grade for {sc.Course.Name}: ");
+
+                double grade;
+                while (!double.TryParse(Console.ReadLine(), out grade))
+                {
+                    Console.Write("Invalid grade, enter again: ");
+                }
+
+                sc.Grade = grade;
+            }
+
+            FileManager.SaveStudentGradesToText(gradesPath, student);
+            GradeManager.CalculateGPA(student);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\nGrades saved successfully.");
+            Console.ResetColor();
+            Console.ReadKey();
+        }
 
         #region Assign courses
         public static void RegisterCoursesFromFile(Student student, string coursesPath)
