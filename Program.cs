@@ -9,16 +9,17 @@ namespace OOP_Pro
     {
         static string Questions()
         {
-            Console.WriteLine("How Can i Help You ?");
+            Console.WriteLine("How Can I Help You ?");
 
-            Console.WriteLine(" 1 - Course ? ");
-            Console.WriteLine(" 2 - Student ?");
-            Console.WriteLine(" 3 - Assign Grade ?");
-            Console.WriteLine(" 4 - Risk and top students ?");
-            Console.WriteLine(" 5 - Attend Course ?");
-            Console.WriteLine(" 7 - Calc GPA Course ?");
-            Console.WriteLine(" 6 - Exit");
-            Console.WriteLine("\n");
+            Console.WriteLine("1 - Course");
+            Console.WriteLine("2 - Student");
+            Console.WriteLine("3 - Register Student Courses");
+            Console.WriteLine("4 - Assign Grade");
+            Console.WriteLine("5 - Attendance");
+            Console.WriteLine("6 - Risk and Top Students");
+            Console.WriteLine("7 - Calc GPA Course");
+            Console.WriteLine("8 - Exit");
+            Console.WriteLine();
 
             return Console.ReadLine();
         }
@@ -27,75 +28,64 @@ namespace OOP_Pro
         {
             while (true)
             {
-                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+                Console.Clear();
+
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
                 string coursesPath = Path.Combine(basePath, "Courses.txt");
                 string studentsPath = Path.Combine(basePath, "Students.txt");
-                
+                string gradesPath = Path.Combine(basePath, "Grades.txt");
+                string attendancePath = Path.Combine(basePath, "Attendance.txt");
+
                 var coursesData = FileManager.ReadCoursesFromText(coursesPath);
                 var studentsData = FileManager.ReadStudentsFromText(studentsPath);
 
-                string Return_User_Result = Questions();
-                Console.WriteLine("\n");
+                string choice = Questions();
 
-                // Exit
-                if (Return_User_Result == "6")
+                if (choice == "8")
                     break;
 
-                var defultVAlu = "y";
-                var inputstudent = "y";
-
                 #region Course
-                if (Return_User_Result == "1")
+                if (choice == "1")
                 {
-                    Console.WriteLine("1 - Add Course ");
-                    Console.WriteLine("2 - All Courses ");
-                    Console.WriteLine("\n");
+                    Console.WriteLine("1 - Add Course");
+                    Console.WriteLine("2 - All Courses");
+                    Console.WriteLine();
 
-                    string CourseChois = Console.ReadLine();
+                    string sub = Console.ReadLine();
 
-                    if (CourseChois == "1")
+                    if (sub == "1")
                     {
                         List<Course> newCourses = new List<Course>();
 
-                        Console.WriteLine(" ( * ) To Exit Write =====> end   ");
+                        Console.WriteLine("Write (end) to stop");
 
-                        while (defultVAlu.ToLower() == "y")
+                        while (true)
                         {
-                            Console.WriteLine("Enter subject name:");
+                            Console.Write("Course Name: ");
                             string name = Console.ReadLine();
+                            if (name.ToLower() == "end") break;
 
-                            if (name.ToLower() != "end")
-                            {
-                                Console.WriteLine("Enter subject hours:");
-                                int hours;
-                                while (!int.TryParse(Console.ReadLine(), out hours))
-                                    Console.WriteLine("Enter subject hours again:");
+                            Console.Write("Credit Hours: ");
+                            int hours;
+                            while (!int.TryParse(Console.ReadLine(), out hours)) ;
 
-                                Console.WriteLine("Enter Lectures Number:");
-                                int lectures;
-                                while (!int.TryParse(Console.ReadLine(), out lectures))
-                                    Console.WriteLine("Enter Lectures Number again:");
+                            Console.Write("Lectures Count: ");
+                            int lectures;
+                            while (!int.TryParse(Console.ReadLine(), out lectures)) ;
 
-                                newCourses.Add(new Course(name, hours, lectures));
-                            }
-                            else
-                            {
-                                defultVAlu = "n";
-                            }
+                            newCourses.Add(new Course(name, hours, lectures));
                         }
 
-                        // merge old + new
                         newCourses.AddRange(coursesData);
-
                         FileManager.SaveCoursesToText(newCourses, coursesPath);
-                        Console.WriteLine("Courses saved successfully.\n");
+
+                        Console.WriteLine("Courses saved successfully.");
                         Console.ReadKey();
                     }
-                    else if (CourseChois == "2")
+                    else if (sub == "2")
                     {
-                        Console.WriteLine("Courses from Text File:\n");
-                        foreach (var item in coursesData)
-                            Console.WriteLine($"Course Name: {item.Name}  ||  Hours: {item.CreditHours} || Lectures Count : {item.NumberOfLeactures}");
+                        foreach (var c in coursesData)
+                            Console.WriteLine($"{c.Name} | Hours: {c.CreditHours} | Lectures: {c.NumberOfLeactures}");
 
                         Console.ReadKey();
                     }
@@ -103,107 +93,112 @@ namespace OOP_Pro
                 #endregion
 
                 #region Student
-                else if (Return_User_Result == "2")
+                else if (choice == "2")
                 {
-                    Console.WriteLine("1 - Add Student ");
-                    Console.WriteLine("2 - All Students ");
-                    Console.WriteLine("\n");
+                    Console.WriteLine("1 - Add Student");
+                    Console.WriteLine("2 - All Students");
+                    Console.WriteLine();
 
-                    string student_Choise = Console.ReadLine();
+                    string sub = Console.ReadLine();
 
-                    if (student_Choise == "1")
+                    if (sub == "1")
                     {
                         List<Student> newStudents = new List<Student>();
+                        Console.WriteLine("Write (end) to stop");
 
-                        Console.WriteLine(" ( * ) To Exit Write =====> end   ");
-
-                        while (inputstudent.ToLower() == "y")
+                        while (true)
                         {
-                            Console.WriteLine("\nStudent Name : ");
-                            var studentname = Console.ReadLine();
+                            Console.Write("Student Name: ");
+                            string name = Console.ReadLine();
+                            if (name.ToLower() == "end") break;
 
-                            if (studentname.ToLower() != "end")
-                                newStudents.Add(new Student(studentname));
-                            else
-                                inputstudent = "n";
+                            newStudents.Add(new Student(name));
                         }
 
-                        // merge old + new
                         newStudents.AddRange(studentsData);
-
                         FileManager.SaveStudentsToText(newStudents, studentsPath);
-                        Console.WriteLine("Students saved successfully.\n");
+
+                        Console.WriteLine("Students saved successfully.");
                         Console.ReadKey();
                     }
-                    else if (student_Choise == "2")
+                    else if (sub == "2")
                     {
-                        Console.WriteLine("Students from Text File:\n");
                         foreach (var s in studentsData)
-                            Console.WriteLine($"Student Name => {s.Name}");
+                            Console.WriteLine(s.Name);
 
                         Console.ReadKey();
                     }
+                }
+                #endregion
+
+                #region Register Courses
+                else if (choice == "3")
+                {
+                    if (studentsData.Count == 0 || coursesData.Count == 0)
+                    {
+                        Console.WriteLine("Students or Courses not found.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    Console.WriteLine("Choose Student:");
+                    for (int i = 0; i < studentsData.Count; i++)
+                        Console.WriteLine($"{i + 1}- {studentsData[i].Name}");
+
+                    if (!int.TryParse(Console.ReadLine(), out int idx) ||
+                        idx < 1 || idx > studentsData.Count)
+                    {
+                        Console.WriteLine("Invalid choice.");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    Student student = studentsData[idx - 1];
+
+                    FileManager.RegisterCoursesFromFile(student, coursesPath);
+                    FileManager.SaveStudentGradesToText(gradesPath, student);
+
+                    Console.WriteLine("Courses registered successfully.");
+                    Console.ReadKey();
                 }
                 #endregion
 
                 #region Assign Grade
-                else if (Return_User_Result == "3")
+                else if (choice == "4")
                 {
-                    
-                    string gradesPath = Path.Combine(basePath, "Grades.txt");
                     Student.AssignGrade(studentsData, coursesData, gradesPath);
-
-                    Console.WriteLine("\nGrades saved successfully.");
-                    Console.ReadKey();
-
-                }
-                #endregion
-
-                #region risk and top students
-                else if (Return_User_Result == "4")
-                {
-                    GradeManager.riskandtopstudents(studentsData);
+                    Console.WriteLine("Grades saved.");
                     Console.ReadKey();
                 }
                 #endregion
 
                 #region Attendance
-                else if (Return_User_Result == "5")
+                else if (choice == "5")
                 {
-                    try
-                    {
-                        Console.WriteLine("1 - Take Attendance");
-                        Console.WriteLine("2 - Show Attendance (One Student)");
-                        Console.WriteLine("3 - Show Attendance (All Students)");
-                        Console.WriteLine("\n");
+                    Console.WriteLine("1 - Take Attendance");
+                    Console.WriteLine("2 - Show Attendance (One Student)");
+                    Console.WriteLine("3 - Show Attendance (All Students)");
 
-                        string attChoice = Console.ReadLine();
-                        string attendancePath = Path.Combine(basePath, "Attendance.txt");
+                    string sub = Console.ReadLine();
 
-                        if (attChoice == "1")
-                            AttendanceManager.TakeAttendance(studentsData, coursesData, attendancePath);
-                        else if (attChoice == "2")
-                            AttendanceManager.ShowAttendanceForSelectedStudent(studentsData, attendancePath);
-                        else if (attChoice == "3")
-                            AttendanceManager.ShowAttendanceForAllStudents(studentsData, attendancePath);
-                        else
-                        {
-                            Console.WriteLine("Invalid choice.");
-                            Console.ReadKey();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Attendance crashed Becouse:");
-                        Console.WriteLine(ex.Message);
-                        Console.WriteLine(ex.StackTrace);
-                        Console.ReadKey();
-                    }
+                    if (sub == "1")
+                        AttendanceManager.TakeAttendance(studentsData, coursesData, attendancePath);
+                    else if (sub == "2")
+                        AttendanceManager.ShowAttendanceForSelectedStudent(studentsData, attendancePath);
+                    else if (sub == "3")
+                        AttendanceManager.ShowAttendanceForAllStudents(studentsData, attendancePath);
+
+                    Console.ReadKey();
                 }
-
                 #endregion
 
-                Console.Clear();
+                #region Risk & Top
+                else if (choice == "6")
+                {
+                    GradeManager.riskandtopstudents(studentsData);
+                    Console.ReadKey();
+                }
+                #endregion
             }
         }
     }

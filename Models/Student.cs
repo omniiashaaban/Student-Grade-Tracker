@@ -25,7 +25,7 @@ namespace OOP_Pro.Models
 
 
         #region Assign grades 
-        public static void AssignGrade(List<Student> students, string gradesPath)
+        public static void AssignGrade(List<Student> students,List<Course> courses, string gradesPath)
         {
             foreach (Student student in students)
             {

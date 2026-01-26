@@ -237,5 +237,72 @@ namespace OOP_Pro.Models
         }
         #endregion
 
+
+        #region تسجبل الطلاب في المواد 
+        public static void RegisterCoursesFromFile(Student student, string coursesPath)
+        {
+            List<Course> allCourses = FileManager.ReadCoursesFromText(coursesPath);
+
+            if (allCourses.Count == 0)
+            {
+                Console.WriteLine("No courses available.");
+                return;
+            }
+
+            Console.WriteLine($"\n Student: {student.Name}");
+            Console.WriteLine("Choose courses:");
+
+            for (int i = 0; i < allCourses.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}- {allCourses[i].Name} " + $"(Hours: {allCourses[i].CreditHours}, Lectures: {allCourses[i].NumberOfLeactures})");
+            }
+
+            Console.WriteLine("Enter course numbers :");
+            string input = Console.ReadLine();
+
+
+            string[] parts = input.Split(',');
+
+            List<int> selectedIndexes = new List<int>();
+
+            foreach (var item in parts)
+            {
+                if (int.TryParse(item.Trim(), out int num))
+                {
+                    int index = num - 1;
+
+                    if (index >= 0 && index < allCourses.Count)
+                    {
+                        selectedIndexes.Add(index);
+                    }
+                }
+            }
+
+            if (selectedIndexes.Count == 0)
+            {
+                Console.WriteLine("No valid courses selected.");
+                return;
+            }
+
+            int addedCount = 0;
+
+            foreach (int i in selectedIndexes)
+            {
+                Course course = allCourses[i];
+
+                bool alreadyAdded = student.Courses
+                    .Any(sc => sc.Course.Name.Equals(course.Name, StringComparison.OrdinalIgnoreCase));
+
+                if (!alreadyAdded)
+                {
+                    student.Courses.Add(new StudentCourse(course, 0));
+                    addedCount++;
+                }
+            }
+
+            Console.WriteLine($"\n{addedCount} course(s) registered successfully!");
+        }
+        #endregion
+
     }
 }
