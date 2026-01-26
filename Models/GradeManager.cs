@@ -8,30 +8,8 @@ namespace OOP_Pro.Models
     {
 
 
-        //#region GPA calculation 
-        //public static double CalculateGPA(Student student)
-        //{
-        //    double total = 0;
-        //    double totalhour = 0;
-
-        //    foreach (var sc in student.Courses)
-        //    {
-        //        total += sc.Grade * sc.Course.CreditHours;
-        //        totalhour += sc.Course.CreditHours;
-        //    }
-
-        //    double gpa100 = Math.Round(total / totalhour);
-        //    double gpa = gpa100 / 25;
-
-        //    Console.WriteLine($"The GPA of {student.Name} is {gpa}");
-        //    return gpa;
-        //}
-
-
-        //#endregion
 
      
-            // GPA لطالب واحد
             public static double CalculateGPA(Student student)
             {
                 if (student.Courses == null || student.Courses.Count == 0)
@@ -58,18 +36,7 @@ namespace OOP_Pro.Models
                 return gpa;
             }
 
-            // GPA لكل الطلاب
-            public static void CalculateGPA(List<Student> students)
-            {
-                Console.Clear();
-                Console.WriteLine("Students GPA:\n");
-
-                foreach (var student in students)
-                {
-                    CalculateGPA(student);
-                }
-            }
-
+     
         #region Identify at-risk and top students
         public static void riskandtopstudents(List<Student>students)
         {

@@ -7,6 +7,7 @@ namespace OOP_Pro
 {
     internal class Program
     {
+        //fathi
         static string Questions()
         {
             Console.WriteLine("How Can I Help You ?");
@@ -17,8 +18,7 @@ namespace OOP_Pro
             Console.WriteLine("4 - Assign Grade");
             Console.WriteLine("5 - Attendance");
             Console.WriteLine("6 - Risk and Top Students");
-            Console.WriteLine("7 - Calc GPA Course");
-            Console.WriteLine("8 - Exit");
+            Console.WriteLine("7 - Exit");
             Console.WriteLine();
 
             return Console.ReadLine();
@@ -31,6 +31,7 @@ namespace OOP_Pro
                 Console.Clear();
 
                 string basePath = AppDomain.CurrentDomain.BaseDirectory;
+
                 string coursesPath = Path.Combine(basePath, "Courses.txt");
                 string studentsPath = Path.Combine(basePath, "Students.txt");
                 string gradesPath = Path.Combine(basePath, "Grades.txt");
@@ -41,8 +42,7 @@ namespace OOP_Pro
 
                 string choice = Questions();
 
-                if (choice == "8")
-                    break;
+            
 
                 if (choice == "1")
                 {
@@ -91,6 +91,7 @@ namespace OOP_Pro
                 }
 
                 #region Student
+
                 else if (choice == "2")
                 {
                     Console.WriteLine("1 - Add Student");
@@ -129,8 +130,9 @@ namespace OOP_Pro
                     }
                 }
                 #endregion
-
+// fathi 
                 #region Register Courses
+
                 else if (choice == "3")
                 {
                     if (studentsData.Count == 0 || coursesData.Count == 0)
@@ -155,14 +157,16 @@ namespace OOP_Pro
                     Student student = studentsData[idx - 1];
 
                     FileManager.RegisterCoursesFromFile(student, coursesPath);
+
                     FileManager.SaveStudentGradesToText(gradesPath, student);
 
-                    Console.WriteLine("Courses registered successfully.");
+                    //Console.WriteLine("Courses registered successfully.");
                     Console.ReadKey();
                 }
                 #endregion
-
+// omnia
                 #region Assign Grade
+
                 else if (choice == "4")
                 {
                     Console.WriteLine("1 - One Student");
@@ -182,6 +186,7 @@ namespace OOP_Pro
                   
                 }
                 #endregion
+ // islam 
 
                 #region Attendance
                 else if (choice == "5")
@@ -202,7 +207,7 @@ namespace OOP_Pro
                     Console.ReadKey();
                 }
                 #endregion
-
+// fathi 
                 #region Risk & Top
                 else if (choice == "6")
                 {
@@ -210,13 +215,9 @@ namespace OOP_Pro
                     Console.ReadKey();
                 }
                 #endregion
-                #region Calc GPA
-                else if (choice == "7")
-                {
-                    GradeManager.CalculateGPA(studentsData);
-                    Console.ReadKey();
-                }
-                #endregion
+    if (choice == "7")
+                    break;
+                
             }
         }
     }

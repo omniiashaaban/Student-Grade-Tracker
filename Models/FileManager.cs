@@ -52,7 +52,6 @@ namespace OOP_Pro.Models
             {
 
                 lines.Add($"{c.Name}|{c.CreditHours}|{c.NumberOfLeactures}");
-                //lines.Add((s) new Course(c.Name, c.CreditHours, c.NumberOfLeactures));
 
             }
 
@@ -264,6 +263,7 @@ namespace OOP_Pro.Models
             }
 
             Console.WriteLine($"\n Student: {student.Name}");
+
             Console.WriteLine("Choose courses:");
 
             for (int i = 0; i < allCourses.Count; i++)
@@ -274,7 +274,7 @@ namespace OOP_Pro.Models
             Console.WriteLine("Enter course numbers :");
             string input = Console.ReadLine();
 
-
+            
             string[] parts = input.Split(',');
 
             List<int> selectedIndexes = new List<int>();
