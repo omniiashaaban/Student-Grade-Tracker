@@ -50,6 +50,9 @@ namespace OOP_Pro.Models
             Console.ReadKey();
         }
 
+
+
+
         public static void ShowAttendanceForSelectedStudent(List<Student> students, string attendancePath)
         {
             if (students == null || students.Count == 0)
@@ -77,8 +80,21 @@ namespace OOP_Pro.Models
                 return;
             }
 
-            foreach (var c in courses)
-                Console.WriteLine($"{c.Course.Name}: {c.NumberOfLeacturesAttended}/{c.Course.NumberOfLeactures}");
+            foreach (var sc in courses)
+            {
+                int totalLectures = sc.Course.NumberOfLeactures;
+                int attended = sc.NumberOfLeacturesAttended;
+
+                if (totalLectures > 0)
+                {
+                    double attendancePercentage = (double)attended / totalLectures * 100;
+                    Console.WriteLine($"{sc.Course.Name}: {attended}/{totalLectures} ({attendancePercentage:F2}%)");
+                }
+                else
+                {
+                    Console.WriteLine($"{sc.Course.Name}: {attended}/Unknown total lectures");
+                }
+            }
 
             Console.ReadKey();
         }

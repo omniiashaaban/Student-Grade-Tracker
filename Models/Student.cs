@@ -25,44 +25,115 @@ namespace OOP_Pro.Models
 
 
         #region Assign grades 
-
-        public static void AssignGrade(List<Student> students, List<Course> courses, string gradesPath)
+        public static void AssignGrade(List<Student> students, string gradesPath)
         {
             foreach (Student student in students)
             {
                 Console.WriteLine($"\nStudent: {student.Name}\n");
 
+               
                 FileManager.LoadStudentGradesFromText(gradesPath, student);
 
-                foreach (var co in courses)
+                if (student.Courses.Count == 0)
                 {
-                    Console.Write($"Enter grade for {co.Name}: ");
+                    Console.WriteLine("This student has no courses registered.");
+                    continue;
+                }
 
+                // إدخال الدرجات لكل مادة  للطالب
+                for (int i = 0; i < student.Courses.Count; i++)
+                {
+                    var sc = student.Courses[i];
+
+                    Console.Write($"Enter grade for {sc.Course.Name}: ");
                     double grade;
                     while (!double.TryParse(Console.ReadLine(), out grade))
-                        Console.Write("Invalid grade, enter again: ");
-
-                    var existing = student.Courses.FirstOrDefault(sc =>
-                        sc.Course.Name.Equals(co.Name, StringComparison.OrdinalIgnoreCase));
-
-                    if (existing != null)
                     {
-                        existing.Grade = grade;
+                        Console.Write("Invalid input. Enter a number: ");
                     }
-                    else
+
+                    sc.Grade = grade; // تحديث الدرجة
+                }
+
+                // حفظ درجات الطالب بعد التعديل
+                FileManager.SaveStudentGradesToText(gradesPath, student);
+
+                Console.WriteLine($"Grades updated for {student.Name} .");
+
+            
+            }
+        }
+        #endregion
+
+
+
+        #region Assign courses
+        public static void RegisterCoursesFromFile(Student student, string coursesPath)
+        {
+         
+            List<Course> allCourses = FileManager.ReadCoursesFromText(coursesPath);
+
+            if (allCourses.Count == 0)
+            {
+                Console.WriteLine("No courses available.");
+                return;
+            }
+
+           
+            Console.WriteLine($"\nStudent: {student.Name}");
+            Console.WriteLine("choose courses :");
+
+            for (int i = 0; i < allCourses.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}- {allCourses[i].Name}");
+            }
+
+            Console.WriteLine("Enter the numbers of courses you want to register (comma separated):");
+            string input = Console.ReadLine();
+
+            string[] parts = input.Split(',');    //استرينج عشان اعمل اسبليت  
+            List<int> selectedIndexes = new List<int>();
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                int index;
+                if (int.TryParse(parts[i].Trim(), out index))
+                {
+                    index = index - 1; // المستخدم يدخل الأرقام من 1
+                    if (index >= 0 && index < allCourses.Count)
                     {
-                        student.Courses.Add(new StudentCourse(co, grade));
+                        selectedIndexes.Add(index);
+                    }
+                }
+            }
+
+            // إضافة المواد للطالب لو مش مسجلة قبل كده
+            for (int i = 0; i < selectedIndexes.Count; i++)
+            {
+                Course course = allCourses[selectedIndexes[i]];
+                bool alreadyAdded = false;
+
+                for (int j = 0; j < student.Courses.Count; j++)
+                {
+                    if (student.Courses[j].Course.Name == course.Name)
+                    {
+                        alreadyAdded = true;
+                        break;
                     }
                 }
 
-                FileManager.SaveStudentGradesToText(gradesPath, student);
-                GradeManager.CalculateGPA(student);
+                if (!alreadyAdded)
+                {
+                    student.Courses.Add(new StudentCourse(course, 0));
+                }
             }
-        }
 
+            Console.WriteLine("\nCourses registered successfully!");
+        }
         #endregion
 
-      
+
+
 
         public override string ToString()
         {
